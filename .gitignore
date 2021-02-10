@@ -58,3 +58,5 @@ sysinfo.txt
 # Crashlytics generated file
 crashlytics-build.properties
 
+/Alone, Together pt2/.collabignore
+/Alone, Together pt2/Temp

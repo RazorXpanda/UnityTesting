@@ -29,4 +29,24 @@ public class Cloner : MonoBehaviour
         }
     }
 
+    private void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.Space))
+            ChangeRandomColor();
+    }
+
+    void ChangeRandomColor()
+    {
+        if (clone.Count <= 0)
+            return;
+
+        var newColor = new Color
+            (
+            Random.Range(0f, 1f),
+            Random.Range(0f, 1f),
+            Random.Range(0f, 1f)
+            );
+
+        clone[0].GetComponent<Renderer>().sharedMaterial.color = newColor;
+    }
 }
