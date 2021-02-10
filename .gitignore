@@ -60,3 +60,4 @@ crashlytics-build.properties
 
 /Alone, Together pt2/.collabignore
 /Alone, Together pt2/Temp
+*.dwlt
