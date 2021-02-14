@@ -6,6 +6,7 @@ public class playerController : MonoBehaviour
 {
     #region Debug
     public float bulletSpeed;
+    public GameObject debugCube;
     #endregion
 
     private Rigidbody2D rbPlayer;
@@ -100,13 +101,9 @@ public class playerController : MonoBehaviour
     {
         var direction = cam.ScreenToWorldPoint(Input.mousePosition) - transform.position;
         direction.z = 0f;
-        direction.Normalize();
+        var _bullet = Instantiate(bulletPrefab, shootingPoint.position, Quaternion.identity);
 
-        Debug.Log($"Direction shot {direction}");
-
-        var bullet = Instantiate(bulletPrefab, shootingPoint.position, Quaternion.identity);
-        LeanTween.move(bullet, direction * 10f, bulletSpeed);
-        Destroy(bullet, bulletSpeed);
+        LeanTween.move(_bullet, shootingPoint.position + (direction.normalized * 10f), .25f);
     }
 }
 

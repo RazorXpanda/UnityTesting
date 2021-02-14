@@ -55,11 +55,8 @@ public class enemyController : MonoBehaviour
     {
         var direction = target.transform.position - transform.position;
         direction.z = 0f;
-        direction.Normalize();
-
-        var bullet = Instantiate(bulletPrefab, shootingPoint.position, Quaternion.identity);
-        LeanTween.move(bullet, direction * 10f, bulletSpeed);
-        Destroy(bullet, bulletSpeed);
+        var _bullet = Instantiate(bulletPrefab, shootingPoint.position, Quaternion.identity);
+        LeanTween.move(_bullet, shootingPoint.position + (direction.normalized * 10f), .25f);
     }
 
     void FixedUpdate()

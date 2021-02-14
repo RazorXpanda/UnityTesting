@@ -9,13 +9,12 @@ public class BulletCollision : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         var data = collision.gameObject.GetComponent<EntityData>();
-        print("Trigger detected");
         if (data != null)
         {
-            Debug.Log($"Hit an entity at point {collision.transform.position}");
-            Debug.Log($"Entity name: {collision.gameObject.name}");
+            // Debug.Log($"Hit an entity at point {collision.transform.position}");
+            // Debug.Log($"Entity name: {collision.gameObject.name}");
 
-            Destroy(collision.gameObject);
+            GameEvents.current.DamageReceived(data.GetInstanceID(), baseDamage);
             Destroy(this.gameObject);
         }
     }
@@ -28,5 +27,6 @@ public class BulletCollision : MonoBehaviour
             trail.startColor = Color.red;
             trail.endColor = Color.yellow;
         }
+        Destroy(this.gameObject, .5f);
     }
 }
