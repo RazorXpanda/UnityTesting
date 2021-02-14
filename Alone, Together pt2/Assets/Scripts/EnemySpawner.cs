@@ -10,7 +10,7 @@ public class EnemySpawner : MonoBehaviour
     public GameObject rightSpawn;
     public GameObject botSpawn;
     [SerializeField]
-    private GameObject enemy; //enemy prefab
+    private GameObject enemyPrefab; //enemy prefab
     [Range (1, 100)] public int maxEnemies = 30;
     public int currentEnemies;
     [SerializeField][Tooltip("This value CANNOT be 0, I inversed it")]
@@ -31,30 +31,30 @@ public class EnemySpawner : MonoBehaviour
             float leftSpawnPos = leftSpawn.transform.position.y + Random.Range(-8f,8f);
             float rightSpawnPos = rightSpawn.transform.position.y + Random.Range(-8f,8f);
             int rand = Random.Range (0,4); //Randomize the spawn points
-            Debug.Log(rand);
+            //Debug.Log(rand);
 
             switch (rand)
             {
                 case 0: //Spawns using the top spawnpoint
-                Instantiate(enemy, new Vector2(topSpawnPos, topSpawn.transform.position.y), Quaternion.identity);
+                    Instantiate(enemyPrefab, new Vector2(topSpawnPos, topSpawn.transform.position.y), Quaternion.identity);
                     currentEnemies++;
                     yield return new WaitForSeconds(spawnRate);
                 break;
 
                 case 1: //Spawns using the bottom spawnpoint
-                Instantiate(enemy, new Vector2(botSpawnPos, botSpawn.transform.position.y), Quaternion.identity);
+                    Instantiate(enemyPrefab, new Vector2(botSpawnPos, botSpawn.transform.position.y), Quaternion.identity);
                     currentEnemies++;
                     yield return new WaitForSeconds(spawnRate);
                 break;
 
                 case 2: //Spawns using the right spawnpoint
-                Instantiate(enemy, new Vector2(rightSpawn.transform.position.x, rightSpawnPos), Quaternion.identity);
+                    Instantiate(enemyPrefab, new Vector2(rightSpawn.transform.position.x, rightSpawnPos), Quaternion.identity);
                     currentEnemies++;
                     yield return new WaitForSeconds(spawnRate);
                 break;
 
                 case 3: //Spawns using the left spawnpoint
-                Instantiate(enemy, new Vector2(leftSpawn.transform.position.x, leftSpawnPos), Quaternion.identity);
+                    Instantiate(enemyPrefab, new Vector2(leftSpawn.transform.position.x, leftSpawnPos), Quaternion.identity);
                     currentEnemies++;
                     yield return new WaitForSeconds(spawnRate);
                 break;

@@ -4,16 +4,19 @@ using UnityEngine;
 
 public class playerController : MonoBehaviour
 {
+    #region Debug
+    public float bulletSpeed;
+    #endregion
+
     private Rigidbody2D rbPlayer;
 
     [SerializeField] private float moveSpeed;
     [SerializeField] private Transform shootingPoint;
-    [SerializeField] private GameObject bullet;
+    [SerializeField] private GameObject bulletPrefab;
     [SerializeField] private Camera cam;
     private Vector2 movement;
     private float angle;
 
-    // Start is called before the first frame update
     void Start()
     {
         //Get the rigidbody attached to the player
@@ -21,11 +24,18 @@ public class playerController : MonoBehaviour
         rbPlayer = GetComponent<Rigidbody2D>();
     }
 
-    // Update is called once per frame
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Mouse0))
+        {
+            Shoot();
+        }
+    }
+
     void FixedUpdate()
     {
-        movement.x = Input.GetAxisRaw("Horizontal"); //PC input
-        movement.y = Input.GetAxisRaw("Vertical");// PC input
+        movement.x = Input.GetAxisRaw("Horizontal");        // PC input
+        movement.y = Input.GetAxisRaw("Vertical");          // PC input
         Vector2 direction = Vector2.up * movement.y + Vector2.right * movement.x;
         rbPlayer.MovePosition(rbPlayer.position + direction * moveSpeed * Time.fixedDeltaTime);
 
@@ -34,8 +44,7 @@ public class playerController : MonoBehaviour
      
         rbPlayer.transform.eulerAngles = new Vector3(0,0,Mathf.Atan2((screenPos.y - transform.position.y), (screenPos.x - transform.position.x))* Mathf.Rad2Deg);;
 
-
-        
+        #region OLD
         // if (movement.x != 0 && movement.y != 0)
         // {
         //     angle = Mathf.Atan2(movement.y, movement.x) * Mathf.Rad2Deg;
@@ -84,14 +93,20 @@ public class playerController : MonoBehaviour
         //     transform.position = pos;
 
         // }
+        #endregion
+    }
 
+    void Shoot()
+    {
+        var direction = cam.ScreenToWorldPoint(Input.mousePosition) - transform.position;
+        direction.z = 0f;
+        direction.Normalize();
 
-        //Shoot
-        if (Input.GetMouseButtonDown(0))
-        {
-            Debug.Log("Shoot!");
-        }
+        Debug.Log($"Direction shot {direction}");
 
+        var bullet = Instantiate(bulletPrefab, shootingPoint.position, Quaternion.identity);
+        LeanTween.move(bullet, direction * 10f, bulletSpeed);
+        Destroy(bullet, bulletSpeed);
     }
 }
 
