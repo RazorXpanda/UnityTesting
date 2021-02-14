@@ -32,7 +32,7 @@ public class playerController : MonoBehaviour
         var mousePos = Input.mousePosition;
         var screenPos = cam.ScreenToWorldPoint(new Vector3(mousePos.x, mousePos.y, transform.position.z - cam.transform.position.z));
      
-        rbPlayer.transform.eulerAngles = new Vector3(0,0,Mathf.Atan2((mousePos.y - transform.position.y), (mousePos.x - transform.position.x))* Mathf.Rad2Deg);;
+        rbPlayer.transform.eulerAngles = new Vector3(0,0,Mathf.Atan2((screenPos.y - transform.position.y), (screenPos.x - transform.position.x))* Mathf.Rad2Deg);;
 
 
         
