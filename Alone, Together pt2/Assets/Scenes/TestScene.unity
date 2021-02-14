@@ -527,8 +527,8 @@ GameObject:
   - component: {fileID: 1850709364}
   - component: {fileID: 1850709366}
   m_Layer: 0
-  m_Name: New Sprite
-  m_TagString: Untagged
+  m_Name: Player
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -844,7 +844,9 @@ MonoBehaviour:
   rightSpawn: {fileID: 798687075}
   botSpawn: {fileID: 2036673603}
   enemy: {fileID: 4374102995686510539, guid: 0e9ac56410891eb4ebf58843b566951b, type: 3}
-  spawnRate: 3
+  maxEnemies: 30
+  currentEnemies: 0
+  spawnRate: 1
 --- !u!4 &2079103465
 Transform:
   m_ObjectHideFlags: 0
