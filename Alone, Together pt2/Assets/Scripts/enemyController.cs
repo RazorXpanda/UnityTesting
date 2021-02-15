@@ -32,8 +32,6 @@ public class enemyController : MonoBehaviour
     private void Update()
     {
         ScanForTargetInRange();
-        if (Input.GetKeyDown(KeyCode.Mouse0))
-            CheckSurrounding();
     }
 
     // Scan for available targets in range
@@ -81,28 +79,11 @@ public class enemyController : MonoBehaviour
 
     void FixedUpdate()
     {
-        Move();
-        RotateToTarget();
-    }
-
-    private void Move()
-    {
-        Move(CheckSurrounding());
-        // Makes move a bit smarter by having the enemy circle around the target if it is already in range
-        /*
-        if (target != null)
+        if(target != null)
         {
-            Vector3 playerPos = target.transform.position;
-
-            //Move towards the target
-            Vector3 moveDirection = playerPos - transform.position;
-            if (Mathf.Abs(moveDirection.magnitude) > approachRange)
-            {
-                Vector2 moveDir = new Vector2(moveDirection.x, moveDirection.y) * 0.5f;
-                enemyRB.MovePosition(enemyRB.position + moveDir * moveSpeed * Time.fixedDeltaTime);
-            }
+            Move(CheckSurrounding());
+            RotateToTarget();
         }
-        */
     }
 
     private void Move(Vector3 targetPos)

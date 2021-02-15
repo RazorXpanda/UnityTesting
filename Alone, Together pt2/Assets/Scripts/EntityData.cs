@@ -37,6 +37,15 @@ public class EntityData : MonoBehaviour
         if(this.GetInstanceID() == _id)
             health -= _damage;
 
+        if (gameObject.tag == "Player")
+        {
+            UIManagement.current.SetOverlayHealthUI(health);
+        }
+        else
+        {
+            SetHealthUI();
+        }
+
         if (health <= 0)
         {
             if (Random.Range(0, 100) > 70)
@@ -45,7 +54,6 @@ public class EntityData : MonoBehaviour
             }
             Destroy(this.gameObject);
         }
-        SetHealthUI();
     }
 
     // Update UI of entity
