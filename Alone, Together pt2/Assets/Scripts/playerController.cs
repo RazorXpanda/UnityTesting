@@ -105,5 +105,10 @@ public class playerController : MonoBehaviour
 
         LeanTween.move(_bullet, shootingPoint.position + (direction.normalized * 20f), .25f);
     }
+
+    public void ResetPlayer()
+    {
+
+    }
 }
 
