@@ -37,6 +37,7 @@ public class playerController : MonoBehaviour
     {
         movement.x = Input.GetAxisRaw("Horizontal");        // PC input
         movement.y = Input.GetAxisRaw("Vertical");          // PC input
+        movement.Normalize();
         Vector2 direction = Vector2.up * movement.y + Vector2.right * movement.x;
         rbPlayer.MovePosition(rbPlayer.position + direction * moveSpeed * Time.fixedDeltaTime);
 
