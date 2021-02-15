@@ -42,7 +42,6 @@ public class enemyController : MonoBehaviour
         {
             if (entity.CompareTag("Player"))
             {
-                Debug.LogWarning($"Detected a target at {entity.transform.position}");
                 if(nextShotTime < Time.time)
                 {
                     Shoot();

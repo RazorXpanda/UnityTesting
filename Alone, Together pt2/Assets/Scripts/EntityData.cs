@@ -1,18 +1,34 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class EntityData : MonoBehaviour
 {
-    public int health;
+    /*
+     * Holds entity's data that triggers certain events
+     * Separate from controller's script to purely just handles data.
+     * Also used to filter out which collider needs event triggers
+     */
+    private static int startingHealth = 100;
+    private int health;
+
+    [Header("UI")]
+    public Color healthColor;
+    public Slider healthSlider;
+    public Image fillImage;
 
     private void OnEnable()
     {
-        health = 100;
+        health = startingHealth;
+        healthSlider.maxValue = startingHealth;
+        healthSlider.minValue = 0f;
+        SetHealthUI();
     }
 
     private void Start()
     {
+        // Subscribe to onDamageReceived event
         GameEvents.current.onDamageReceived += TakeDamage;
     }
 
@@ -22,11 +38,26 @@ public class EntityData : MonoBehaviour
             health -= _damage;
 
         if (health <= 0)
+        {
+            if (Random.Range(0, 100) > 70)
+            {
+                Debug.Log("Instatiate drops");
+            }
             Destroy(this.gameObject);
+        }
+        SetHealthUI();
+    }
+
+    // Update UI of entity
+    private void SetHealthUI()
+    {
+        healthSlider.value = health;
+        fillImage.color = healthColor;
     }
 
     private void OnDestroy()
     {
+        // Unsubscribe from all events here
         GameEvents.current.onDamageReceived -= TakeDamage;
     }
 }

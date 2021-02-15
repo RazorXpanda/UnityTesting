@@ -11,16 +11,15 @@ public class BulletCollision : MonoBehaviour
         var data = collision.gameObject.GetComponent<EntityData>();
         if (data != null)
         {
-            // Debug.Log($"Hit an entity at point {collision.transform.position}");
-            // Debug.Log($"Entity name: {collision.gameObject.name}");
-
+            // Call event to send damage to entity
             GameEvents.current.DamageReceived(data.GetInstanceID(), baseDamage);
-            Destroy(this.gameObject);
         }
+        Destroy(this.gameObject);
     }
 
     private void Start()
     {
+        // Initiallized bullet trail data
         var trail = GetComponent<TrailRenderer>();
         if(trail != null)
         {

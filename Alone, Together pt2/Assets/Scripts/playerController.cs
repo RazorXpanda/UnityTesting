@@ -103,7 +103,7 @@ public class playerController : MonoBehaviour
         direction.z = 0f;
         var _bullet = Instantiate(bulletPrefab, shootingPoint.position, Quaternion.identity);
 
-        LeanTween.move(_bullet, shootingPoint.position + (direction.normalized * 10f), .25f);
+        LeanTween.move(_bullet, shootingPoint.position + (direction.normalized * 20f), .25f);
     }
 }
 
