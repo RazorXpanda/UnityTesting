@@ -41,6 +41,7 @@ public class playerController : MonoBehaviour
     {
         movement.x = Input.GetAxisRaw("Horizontal");        // PC input
         movement.y = Input.GetAxisRaw("Vertical");          // PC input
+        movement.Normalize();
         Vector2 direction = Vector2.up * movement.y + Vector2.right * movement.x;
         rbPlayer.MovePosition(rbPlayer.position + direction * moveSpeed * Time.fixedDeltaTime);
 
@@ -108,6 +109,11 @@ public class playerController : MonoBehaviour
         var _bullet = Instantiate(bulletPrefab, shootingPoint.position, Quaternion.identity);
         m_audioSource.PlayOneShot(m_audioClip);
         LeanTween.move(_bullet, shootingPoint.position + (direction.normalized * 20f), .25f);
+    }
+
+    public void ResetPlayer()
+    {
+
     }
 }
 
