@@ -6,15 +6,14 @@ using UnityEngine.UI;
 public class UIManagement : MonoBehaviour
 {
     public static UIManagement current;
-    public Slider slider;
 
-    private void Start()
+    private void Awake()
     {
         current = this;
     }
 
-    public void SetOverlayHealthUI(int _value)
+    public void SetOverlayHealthUI(Slider _slider, int _value)
     {
-        slider.value = _value;
+        _slider.value = _value;
     }
 }

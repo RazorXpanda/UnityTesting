@@ -23,7 +23,8 @@ public class EntityData : MonoBehaviour
         health = startingHealth;
         healthSlider.maxValue = startingHealth;
         healthSlider.minValue = 0f;
-        SetHealthUI();
+        fillImage.color = healthColor;
+        UIManagement.current.SetOverlayHealthUI(healthSlider, health);
     }
 
     private void Start()
@@ -35,32 +36,18 @@ public class EntityData : MonoBehaviour
     private void TakeDamage(int _id, int _damage)
     {
         if(this.GetInstanceID() == _id)
+        {
             health -= _damage;
-
-        if (gameObject.tag == "Player")
-        {
-            UIManagement.current.SetOverlayHealthUI(health);
-        }
-        else
-        {
-            SetHealthUI();
-        }
-
-        if (health <= 0)
-        {
-            if (Random.Range(0, 100) > 70)
+            UIManagement.current.SetOverlayHealthUI(healthSlider, health);
+            if (health <= 0)
             {
-                Debug.Log("Instatiate drops");
+                if (Random.Range(0, 100) > 70)
+                {
+                    Debug.Log("Instantiate drops");
+                }
+                Destroy(this.gameObject);
             }
-            Destroy(this.gameObject);
         }
-    }
-
-    // Update UI of entity
-    private void SetHealthUI()
-    {
-        healthSlider.value = health;
-        fillImage.color = healthColor;
     }
 
     private void OnDestroy()

@@ -11,6 +11,7 @@ public class enemyController : MonoBehaviour
     private GameObject target;
     private Rigidbody2D enemyRB;
 
+    public float chaseTime;
     public float shotDelay;
     public float detectionRange;
     public float approachMin;           //closest it wants to go to the player
@@ -24,14 +25,29 @@ public class enemyController : MonoBehaviour
     void Start()
     {
         enemyRB = GetComponent<Rigidbody2D>();
-        target = GameObject.FindGameObjectWithTag("Player");
+        target = GameObject.FindGameObjectWithTag("Objective");
         approachRange = Random.Range(approachMin, approachMax);
         nextShotTime = Time.time + 5f;
+        chaseTime = 5f;
     }
 
     private void Update()
     {
-        ScanForTargetInRange();
+        if (chaseTime <= 0 || target == null || !target.tag.Contains("Player"))
+        {
+            ScanForTargetInRange();
+        }
+        else
+            chaseTime -= Time.deltaTime;
+
+        if (nextShotTime < Time.time)
+        {
+            if (target != null && IsAnythingInTheWay() == false)
+            {
+                Attack();
+                nextShotTime = Time.time + shotDelay;
+            }
+        }
     }
 
     // Scan for available targets in range
@@ -41,40 +57,56 @@ public class enemyController : MonoBehaviour
 
         foreach (var entity in entities)
         {
-            if (entity.CompareTag("Player"))
+            if (entity.tag.Contains("Player"))
             {
-                if(nextShotTime < Time.time)
-                {
-                    if (IsAnythingInTheWay() == false)
-                    {
-                        Shoot();
-                        nextShotTime = Time.time + shotDelay;
-                    }
-                }
+                target = entity.gameObject;
+                chaseTime = 5f;
+                return;
+            }
+            else if (entity.tag.Contains("Objective"))
+            {
+                target = entity.gameObject;
             }
         }
+
+        target = GameObject.FindGameObjectWithTag("Objective");
     }
 
     bool IsAnythingInTheWay()
     {
         bool value = false;
-        var lineOfSight = Physics2D.RaycastAll(shootingPoint.position, target.transform.position - transform.position);
+        var lineOfSight = Physics2D.RaycastAll(shootingPoint.position, target.transform.position - transform.position, (target.transform.position - transform.position).magnitude);
 
         foreach(var item in lineOfSight)
         {
             if (item.transform.tag.Contains("Enemy"))
+                value = true;
+            if (item.transform.tag.Contains("Obstacle"))
                 value = true;
         }
 
         return value;
     }
 
-    void Shoot()
+    void Attack()
     {
-        var direction = target.transform.position - transform.position;
-        direction.z = 0f;
-        var _bullet = Instantiate(bulletPrefab, shootingPoint.position, Quaternion.identity);
-        LeanTween.move(_bullet, shootingPoint.position + (direction.normalized * 10f), .25f);
+        var distanceToTarget = (transform.position - target.transform.position).magnitude;
+        if (distanceToTarget <= detectionRange + 1f)
+        {
+            if(distanceToTarget <= 2f)
+            {
+                // Close combat
+                Debug.Log("Melee attack");
+            }
+            else
+            {
+                // At a distance, shoot
+                var direction = target.transform.position - transform.position;
+                direction.z = 0f;
+                var _bullet = Instantiate(bulletPrefab, shootingPoint.position, Quaternion.identity);
+                LeanTween.move(_bullet, shootingPoint.position + (direction.normalized * 10f), .25f);
+            }
+        }
     }
 
     void FixedUpdate()
@@ -129,7 +161,7 @@ public class enemyController : MonoBehaviour
         #region Directional Raycast
         // Determine points value for North
         float Npoints = 100f;
-        if ((N - target.transform.position).magnitude <= approachRange)
+        if (Mathf.Abs((N - target.transform.position).magnitude) <= approachRange)
         {
             Npoints = 0;
         }
@@ -140,15 +172,17 @@ public class enemyController : MonoBehaviour
                 // Check for anything in the way
                 if (hit.collider.tag.Contains("Enemy"))
                 {
-                    Npoints -= 5f;
+                    Npoints -= 15f;
                 }
+                else
+                    Npoints -= 10f;
             }
         }
         Npoints /= (N - target.transform.position).magnitude;
         directionalKeys.Add(N, Npoints);
 
         float NEpoints = 100f;
-        if ((NE - target.transform.position).magnitude <= approachRange)
+        if (Mathf.Abs((NE - target.transform.position).magnitude) <= approachRange)
         {
             NEpoints = 0;
         }
@@ -159,15 +193,17 @@ public class enemyController : MonoBehaviour
                 // Check for anything in the way
                 if (hit.collider.tag.Contains("Enemy"))
                 {
-                    NEpoints -= 5f;
+                    NEpoints -= 15f;
                 }
+                else
+                    NEpoints -= 10f;
             }
         }
         NEpoints /= (NE - target.transform.position).magnitude;
         directionalKeys.Add(NE, NEpoints);
 
         float Epoints = 100f;
-        if ((E - target.transform.position).magnitude <= approachRange)
+        if (Mathf.Abs((E - target.transform.position).magnitude) <= approachRange)
         {
             Epoints = 0;
         }
@@ -178,15 +214,17 @@ public class enemyController : MonoBehaviour
                 // Check for anything in the way
                 if (hit.collider.tag.Contains("Enemy"))
                 {
-                    Epoints -= 5f;
+                    Epoints -= 15f;
                 }
+                else
+                    NEpoints -= 10f;
             }
         }
         Epoints /= (E - target.transform.position).magnitude;
         directionalKeys.Add(E, NEpoints);
 
         float SEpoints = 100f;
-        if ((SE - target.transform.position).magnitude <= approachRange)
+        if (Mathf.Abs((SE - target.transform.position).magnitude) <= approachRange)
         {
             SEpoints = 0;
         }
@@ -197,15 +235,17 @@ public class enemyController : MonoBehaviour
                 // Check for anything in the way
                 if (hit.collider.tag.Contains("Enemy"))
                 {
-                    SEpoints -= 5f;
+                    SEpoints -= 15f;
                 }
+                else
+                    SEpoints -= 10f;
             }
         }
         SEpoints /= (SE - target.transform.position).magnitude;
         directionalKeys.Add(SE, NEpoints);
 
         float Spoints = 100f;
-        if ((S - target.transform.position).magnitude <= approachRange)
+        if (Mathf.Abs((S - target.transform.position).magnitude) <= approachRange)
         {
             Spoints = 0;
         }
@@ -216,8 +256,10 @@ public class enemyController : MonoBehaviour
                 // Check for anything in the way
                 if (hit.collider.tag.Contains("Enemy"))
                 {
-                    Spoints -= 5f;
+                    Spoints -= 15f;
                 }
+                else
+                    Spoints -= 10f;
             }
         }
         Spoints /= (S - target.transform.position).magnitude;
@@ -225,7 +267,7 @@ public class enemyController : MonoBehaviour
 
         // If want to reduce resource consumption, only check the 5 directions in front and to the side
         float SWpoints = 100f;
-        if ((SW - target.transform.position).magnitude <= approachRange)
+        if (Mathf.Abs((SW - target.transform.position).magnitude) <= approachRange)
         {
             SWpoints = 0;
         }
@@ -236,15 +278,17 @@ public class enemyController : MonoBehaviour
                 // Check for anything in the way
                 if (hit.collider.tag.Contains("Enemy"))
                 {
-                    SWpoints -= 5f;
+                    SWpoints -= 15f;
                 }
+                else
+                    SWpoints -= 10f;
             }
         }
         SWpoints /= (SW - target.transform.position).magnitude;
         directionalKeys.Add(SW, SWpoints);
 
         float Wpoints = 100f;
-        if ((W - target.transform.position).magnitude <= approachRange)
+        if (Mathf.Abs((W - target.transform.position).magnitude) <= approachRange)
         {
             Wpoints = 0;
         }
@@ -255,15 +299,17 @@ public class enemyController : MonoBehaviour
                 // Check for anything in the way
                 if (hit.collider.tag.Contains("Enemy"))
                 {
-                    Wpoints -= 5f;
+                    Wpoints -= 15f;
                 }
+                else
+                    Wpoints -= 10f;
             }
         }
         Wpoints /= (W - target.transform.position).magnitude;
         directionalKeys.Add(W, Wpoints);
 
         float NWpoints = 100f;
-        if ((NW - target.transform.position).magnitude <= approachRange)
+        if (Mathf.Abs((NW - target.transform.position).magnitude) <= approachRange)
         {
             NWpoints = 0;
         }
@@ -274,8 +320,10 @@ public class enemyController : MonoBehaviour
                 // Check for anything in the way
                 if (hit.collider.tag.Contains("Enemy"))
                 {
-                    NWpoints -= 5f;
+                    NWpoints -= 15f;
                 }
+                else
+                    NWpoints -= 10f;
             }
         }
         NWpoints /= (NW - target.transform.position).magnitude;
@@ -312,5 +360,7 @@ public class enemyController : MonoBehaviour
         Gizmos.DrawLine(transform.position, SW);
         Gizmos.DrawLine(transform.position, W);
         Gizmos.DrawLine(transform.position, NW);
+
+        Gizmos.DrawWireSphere(transform.position, detectionRange);
     }
 }

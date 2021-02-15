@@ -41,16 +41,17 @@ public class GameManager : MonoBehaviour
         yield return StartCoroutine(RoundEnding());
 
         // Either enable the UI for start over or exit to main menu here
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name); // For playing again
+        // SceneManager.LoadScene(SceneManager.GetActiveScene().name); // For playing again
         // or load the main menu scene
         SceneManager.LoadScene("MainMenu");
     }
 
     private IEnumerator RoundStarting()
     {
-        ResetRound();
+        DisablePlayerControl();
 
         Debug.Log("Round is starting");
+        // Do any before round start sequences here
         yield return startWait;
 
         EnablePlayerControl();
@@ -72,14 +73,24 @@ public class GameManager : MonoBehaviour
 
     private void ResetRound()
     {
-        // Reset player's position, remove all enemies entities that are still active
-        // Disable spawners
+        // Reload game scene is the quickest way to start over
         return;
     }
 
     private void EnablePlayerControl()
     {
         // Eneable playerController script, enabling their ability to control the character
+        var player = GameObject.FindGameObjectWithTag("Player");
+        player.GetComponent<playerController>().enabled = true;
+        return;
+    }
+
+    private void DisablePlayerControl()
+    {
+        // Disable playerController script, enabling their ability to control the character
+        var player = GameObject.FindGameObjectWithTag("Player");
+        player.GetComponent<playerController>().enabled = false;
+
         return;
     }
 

@@ -24,8 +24,6 @@ public class playerController : MonoBehaviour
 
     void Start()
     {
-        //Get the rigidbody attached to the player
-        //Temporarily disable due to rigidbody issues
         rbPlayer = GetComponent<Rigidbody2D>();
     }
 
@@ -49,57 +47,6 @@ public class playerController : MonoBehaviour
         var screenPos = cam.ScreenToWorldPoint(new Vector3(mousePos.x, mousePos.y, transform.position.z - cam.transform.position.z));
      
         rbPlayer.transform.eulerAngles = new Vector3(0,0,Mathf.Atan2((screenPos.y - transform.position.y), (screenPos.x - transform.position.x))* Mathf.Rad2Deg);;
-
-        #region OLD
-        // if (movement.x != 0 && movement.y != 0)
-        // {
-        //     angle = Mathf.Atan2(movement.y, movement.x) * Mathf.Rad2Deg;
-        //     rbPlayer.rotation = angle;
-        // }
-
-        // if (movement != Vector2.zero)
-        // {
-        //     rbPlayer.MoveRotation(angle);
-        // }
-
-        // //I reckon we should not use velocity. Players cannot control the speed of the ball after key release.
-        // //Move forward
-        // if (Input.GetKey(KeyCode.W))
-        // {
-        //     //rbPlayer.velocity = -transform.forward * moveSpeed;
-        //     Vector3 pos = transform.position;
-        //     pos += transform.up * moveSpeed * Time.deltaTime;
-        //     transform.position = pos;
-
-        // }
-        // //Move backwards
-        // if (Input.GetKey(KeyCode.S))
-        // {
-        //     rbPlayer.velocity = transform.forward * moveSpeed;
-        //     Vector3 pos = transform.position;
-        //     pos += -transform.up * moveSpeed * Time.deltaTime;
-        //     transform.position = pos;
-
-        // }
-        // //Move left
-        // if (Input.GetKey(KeyCode.A))
-        // {
-        //     //rbPlayer.velocity = -transform.right * moveSpeed;
-        //     Vector3 pos = transform.position;
-        //     pos += -transform.right * moveSpeed * Time.deltaTime;
-        //     transform.position = pos;
-
-        // }
-        // //Move right
-        // if (Input.GetKey(KeyCode.D))
-        // {
-        //     //rbPlayer.velocity = transform.right * moveSpeed;
-        //     Vector3 pos = transform.position;
-        //     pos += transform.right * moveSpeed * Time.deltaTime;
-        //     transform.position = pos;
-
-        // }
-        #endregion
     }
 
     void Shoot()
