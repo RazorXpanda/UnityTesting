@@ -18,6 +18,10 @@ public class playerController : MonoBehaviour
     private Vector2 movement;
     private float angle;
 
+    //Audio use
+    [SerializeField] private AudioClip m_audioClip;
+    [SerializeField] private AudioSource m_audioSource;
+
     void Start()
     {
         //Get the rigidbody attached to the player
@@ -102,7 +106,7 @@ public class playerController : MonoBehaviour
         var direction = cam.ScreenToWorldPoint(Input.mousePosition) - transform.position;
         direction.z = 0f;
         var _bullet = Instantiate(bulletPrefab, shootingPoint.position, Quaternion.identity);
-
+        m_audioSource.PlayOneShot(m_audioClip);
         LeanTween.move(_bullet, shootingPoint.position + (direction.normalized * 20f), .25f);
     }
 }
