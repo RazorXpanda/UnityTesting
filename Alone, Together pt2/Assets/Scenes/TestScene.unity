@@ -8473,6 +8473,31 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 280843702482072084, guid: d83d764c6d0b2354d933c6b9ef2c865c,
+        type: 3}
+      propertyPath: attackRange
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 280843702482072084, guid: d83d764c6d0b2354d933c6b9ef2c865c,
+        type: 3}
+      propertyPath: enemyLayers.m_Bits
+      value: 256
+      objectReference: {fileID: 0}
+    - target: {fileID: 1253661762033617961, guid: d83d764c6d0b2354d933c6b9ef2c865c,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1253661762033617961, guid: d83d764c6d0b2354d933c6b9ef2c865c,
+        type: 3}
+      propertyPath: m_SortingLayer
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1253661762033617961, guid: d83d764c6d0b2354d933c6b9ef2c865c,
+        type: 3}
+      propertyPath: m_SortingLayerID
+      value: -672953261
+      objectReference: {fileID: 0}
     - target: {fileID: 7752571279893993472, guid: d83d764c6d0b2354d933c6b9ef2c865c,
         type: 3}
       propertyPath: cam
@@ -8587,6 +8612,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7752571281683338005, guid: d83d764c6d0b2354d933c6b9ef2c865c,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8878636839789364689, guid: d83d764c6d0b2354d933c6b9ef2c865c,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d83d764c6d0b2354d933c6b9ef2c865c, type: 3}
