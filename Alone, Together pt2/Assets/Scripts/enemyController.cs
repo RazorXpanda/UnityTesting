@@ -5,12 +5,10 @@ using UnityEngine;
 
 public class enemyController : MonoBehaviour
 {
-    #region Debug
-    public float bulletSpeed;
-    #endregion
     private GameObject target;
     private Rigidbody2D enemyRB;
 
+    public float bulletSpeed;
     public float chaseTime;
     public float shotDelay;
     public float detectionRange;
@@ -21,7 +19,10 @@ public class enemyController : MonoBehaviour
     [SerializeField] private GameObject bulletPrefab;
     [SerializeField] private Transform shootingPoint;
     [SerializeField] [Range(0, 5)] float moveSpeed;
-    
+
+    [Header("SFX")]
+    [SerializeField] private AudioClip m_audioClip;
+    [SerializeField] private AudioSource m_audioSource;
     void Start()
     {
         enemyRB = GetComponent<Rigidbody2D>();
@@ -104,6 +105,7 @@ public class enemyController : MonoBehaviour
                 var direction = target.transform.position - transform.position;
                 direction.z = 0f;
                 var _bullet = Instantiate(bulletPrefab, shootingPoint.position, Quaternion.identity);
+                m_audioSource.PlayOneShot(m_audioClip);
                 LeanTween.move(_bullet, shootingPoint.position + (direction.normalized * 10f), .25f);
             }
         }

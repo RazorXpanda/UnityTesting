@@ -18,7 +18,7 @@ public class playerController : MonoBehaviour
     private Vector2 movement;
     private float angle;
 
-    //Audio use
+    [Header("SFX")]
     [SerializeField] private AudioClip m_audioClip;
     [SerializeField] private AudioSource m_audioSource;
 
