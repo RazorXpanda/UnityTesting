@@ -7,7 +7,9 @@ public class enemyController : MonoBehaviour
 {
     private GameObject target;
     private Rigidbody2D enemyRB;
+    private Animator animator;
 
+    public bool isAggro = false;
     public float bulletSpeed;
     public float chaseTime;
     public float shotDelay;
@@ -17,6 +19,7 @@ public class enemyController : MonoBehaviour
     private float approachRange;
     private float nextShotTime;
     [SerializeField] private GameObject bulletPrefab;
+    [SerializeField] private Transform pivotPoint;
     [SerializeField] private Transform shootingPoint;
     [SerializeField] [Range(0, 5)] float moveSpeed;
 
@@ -26,9 +29,9 @@ public class enemyController : MonoBehaviour
     void Start()
     {
         enemyRB = GetComponent<Rigidbody2D>();
-        target = GameObject.FindGameObjectWithTag("Objective");
+        animator = GetComponent<Animator>();
         approachRange = Random.Range(approachMin, approachMax);
-        nextShotTime = Time.time + 5f;
+        nextShotTime = Time.time + 3f;
         chaseTime = 5f;
     }
 
@@ -54,12 +57,13 @@ public class enemyController : MonoBehaviour
     // Scan for available targets in range
     void ScanForTargetInRange()
     {
-        var entities = Physics2D.OverlapCircleAll(transform.position, detectionRange);
+        var entities = Physics2D.OverlapCircleAll(transform.position, detectionRange  * 1.5f);
 
         foreach (var entity in entities)
         {
             if (entity.tag.Contains("Player"))
             {
+                isAggro = true;
                 target = entity.gameObject;
                 chaseTime = 5f;
                 return;
@@ -70,7 +74,8 @@ public class enemyController : MonoBehaviour
             }
         }
 
-        target = GameObject.FindGameObjectWithTag("Objective");
+        if(isAggro == true)
+            target = GameObject.FindGameObjectWithTag("Objective");
     }
 
     bool IsAnythingInTheWay()
@@ -92,7 +97,7 @@ public class enemyController : MonoBehaviour
     void Attack()
     {
         var distanceToTarget = (transform.position - target.transform.position).magnitude;
-        if (distanceToTarget <= detectionRange + 1f)
+        if (distanceToTarget <= detectionRange * 2f)
         {
             if(distanceToTarget <= 2f)
             {
@@ -115,7 +120,11 @@ public class enemyController : MonoBehaviour
     {
         if(target != null)
         {
-            Move(CheckSurrounding());
+            Vector3 targetVector = target.transform.position - transform.position;
+            if (Mathf.Abs(targetVector.magnitude) < detectionRange)
+                Move(CheckSurrounding());
+            else
+                Move(transform.position + targetVector.normalized);
             RotateToTarget();
         }
     }
@@ -128,19 +137,23 @@ public class enemyController : MonoBehaviour
 
     private void RotateToTarget()
     {
-        if(target != null)
+        // Rotate the shooting point to target
+        if (target != null)
         {
             //Look towards the target
             Vector2 lookDir = target.transform.position - transform.position;
             float angle = Vector2.Angle(Vector2.up, lookDir);
 
+            animator.SetFloat("moveX", lookDir.x);
+            animator.SetFloat("moveY", lookDir.y);
+
             if (lookDir.x >= 0)
             {
-                transform.eulerAngles = new Vector3(0, 0, -angle);
+                pivotPoint.transform.eulerAngles = new Vector3(0, 0, -angle);
             }
             else
             {
-                transform.eulerAngles = new Vector3(0, 0, angle);
+                pivotPoint.transform.eulerAngles = new Vector3(0, 0, angle);
             }
         }
     }
@@ -174,10 +187,10 @@ public class enemyController : MonoBehaviour
                 // Check for anything in the way
                 if (hit.collider.tag.Contains("Enemy"))
                 {
-                    Npoints -= 15f;
+                    Npoints -= 55f;
                 }
                 else
-                    Npoints -= 10f;
+                    Npoints -= 45f;
             }
         }
         Npoints /= (N - target.transform.position).magnitude;
@@ -195,13 +208,13 @@ public class enemyController : MonoBehaviour
                 // Check for anything in the way
                 if (hit.collider.tag.Contains("Enemy"))
                 {
-                    NEpoints -= 15f;
+                    NEpoints -= 55f;
                 }
                 else
-                    NEpoints -= 10f;
+                    NEpoints -= 45f;
             }
         }
-        NEpoints /= (NE - target.transform.position).magnitude;
+        NEpoints /= Mathf.Abs((NE - target.transform.position).magnitude);
         directionalKeys.Add(NE, NEpoints);
 
         float Epoints = 100f;
@@ -216,13 +229,13 @@ public class enemyController : MonoBehaviour
                 // Check for anything in the way
                 if (hit.collider.tag.Contains("Enemy"))
                 {
-                    Epoints -= 15f;
+                    Epoints -= 55f;
                 }
                 else
-                    NEpoints -= 10f;
+                    NEpoints -= 45f;
             }
         }
-        Epoints /= (E - target.transform.position).magnitude;
+        Epoints /= Mathf.Abs((E - target.transform.position).magnitude);
         directionalKeys.Add(E, NEpoints);
 
         float SEpoints = 100f;
@@ -237,13 +250,13 @@ public class enemyController : MonoBehaviour
                 // Check for anything in the way
                 if (hit.collider.tag.Contains("Enemy"))
                 {
-                    SEpoints -= 15f;
+                    SEpoints -= 55f;
                 }
                 else
-                    SEpoints -= 10f;
+                    SEpoints -= 45f;
             }
         }
-        SEpoints /= (SE - target.transform.position).magnitude;
+        SEpoints /= Mathf.Abs((SE - target.transform.position).magnitude);
         directionalKeys.Add(SE, NEpoints);
 
         float Spoints = 100f;
@@ -258,13 +271,13 @@ public class enemyController : MonoBehaviour
                 // Check for anything in the way
                 if (hit.collider.tag.Contains("Enemy"))
                 {
-                    Spoints -= 15f;
+                    Spoints -= 55f;
                 }
                 else
-                    Spoints -= 10f;
+                    Spoints -= 45f;
             }
         }
-        Spoints /= (S - target.transform.position).magnitude;
+        Spoints /= Mathf.Abs((S - target.transform.position).magnitude);
         directionalKeys.Add(S, Spoints);
 
         // If want to reduce resource consumption, only check the 5 directions in front and to the side
@@ -280,13 +293,13 @@ public class enemyController : MonoBehaviour
                 // Check for anything in the way
                 if (hit.collider.tag.Contains("Enemy"))
                 {
-                    SWpoints -= 15f;
+                    SWpoints -= 55f;
                 }
                 else
-                    SWpoints -= 10f;
+                    SWpoints -= 45f;
             }
         }
-        SWpoints /= (SW - target.transform.position).magnitude;
+        SWpoints /= Mathf.Abs((SW - target.transform.position).magnitude);
         directionalKeys.Add(SW, SWpoints);
 
         float Wpoints = 100f;
@@ -301,13 +314,13 @@ public class enemyController : MonoBehaviour
                 // Check for anything in the way
                 if (hit.collider.tag.Contains("Enemy"))
                 {
-                    Wpoints -= 15f;
+                    Wpoints -= 55f;
                 }
                 else
-                    Wpoints -= 10f;
+                    Wpoints -= 45f;
             }
         }
-        Wpoints /= (W - target.transform.position).magnitude;
+        Wpoints /= Mathf.Abs((W - target.transform.position).magnitude);
         directionalKeys.Add(W, Wpoints);
 
         float NWpoints = 100f;
@@ -322,13 +335,13 @@ public class enemyController : MonoBehaviour
                 // Check for anything in the way
                 if (hit.collider.tag.Contains("Enemy"))
                 {
-                    NWpoints -= 15f;
+                    NWpoints -= 55f;
                 }
                 else
-                    NWpoints -= 10f;
+                    NWpoints -= 45f;
             }
         }
-        NWpoints /= (NW - target.transform.position).magnitude;
+        NWpoints /= Mathf.Abs((NW - target.transform.position).magnitude);
         directionalKeys.Add(NW, NWpoints);
         #endregion
 

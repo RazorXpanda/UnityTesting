@@ -13,6 +13,8 @@ public class EntityData : MonoBehaviour
     private static int startingHealth = 100;
     private int health;
 
+    public GameObject dropPrefab;
+
     [Header("UI")]
     public Color healthColor;
     public Slider healthSlider;
@@ -43,7 +45,7 @@ public class EntityData : MonoBehaviour
             {
                 if (Random.Range(0, 100) > 70)
                 {
-                    Debug.Log("Instantiate drops");
+                    Instantiate(dropPrefab, transform.position, Quaternion.identity);
                 }
                 Destroy(this.gameObject);
             }

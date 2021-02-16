@@ -14,7 +14,9 @@ public class BulletCollision : MonoBehaviour
             // Call event to send damage to entity
             GameEvents.current.DamageReceived(data.GetInstanceID(), baseDamage);
         }
-        Destroy(this.gameObject);
+
+        if(collision.isTrigger != true)
+            Destroy(this.gameObject);
     }
 
     private void Start()
