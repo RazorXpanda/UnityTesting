@@ -375,7 +375,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -485,8 +485,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4fbe3fac8d8eb3448831fe504a8fd0a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dropPrefab: {fileID: 5578073681984955544, guid: 9b7fbb3dd0d851c4187fe4e218734407,
+  dropPrefab: {fileID: 5168742488076379148, guid: 9b7fbb3dd0d851c4187fe4e218734407,
     type: 3}
+  dropChance: 15
   healthColor: {r: 0.18942387, g: 0.990566, b: 0, a: 1}
   healthSlider: {fileID: 830628559}
   fillImage: {fileID: 178497822}
@@ -508,7 +509,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -528,7 +529,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 7
+  m_SortingOrder: 6
   m_Sprite: {fileID: -7419803527802193913, guid: 4d3b145ff8724ce4d99b98c0cf56858e,
     type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -590,7 +591,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.25
   m_Pitch: 1
   Loop: 0
   Mute: 0

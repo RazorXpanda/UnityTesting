@@ -14,6 +14,7 @@ public class EntityData : MonoBehaviour
     private int health;
 
     public GameObject dropPrefab;
+    public int dropChance;
 
     [Header("UI")]
     public Color healthColor;
@@ -22,11 +23,14 @@ public class EntityData : MonoBehaviour
 
     private void OnEnable()
     {
-        health = startingHealth;
-        healthSlider.maxValue = startingHealth;
-        healthSlider.minValue = 0f;
-        fillImage.color = healthColor;
-        UIManagement.current.SetOverlayHealthUI(healthSlider, health);
+        if(healthSlider != null)
+        {
+            health = startingHealth;
+            healthSlider.maxValue = startingHealth;
+            healthSlider.minValue = 0f;
+            fillImage.color = healthColor;
+            UIManagement.current.SetOverlayHealthUI(healthSlider, health);
+        }
     }
 
     private void Start()
@@ -40,15 +44,20 @@ public class EntityData : MonoBehaviour
         if(this.GetInstanceID() == _id)
         {
             health -= _damage;
-            UIManagement.current.SetOverlayHealthUI(healthSlider, health);
+
             if (health <= 0)
             {
-                if (Random.Range(0, 100) > 70)
+                if (Random.Range(0, 100) < dropChance)
                 {
                     Instantiate(dropPrefab, transform.position, Quaternion.identity);
                 }
                 Destroy(this.gameObject);
             }
+            else if (health > 100)
+                health = 100;
+
+            if (healthSlider != null)
+                UIManagement.current.SetOverlayHealthUI(healthSlider, health);
         }
     }
 

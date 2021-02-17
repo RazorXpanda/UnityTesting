@@ -7,6 +7,9 @@ TagManager:
   - Enemy
   - Objective
   - Obstacle
+  - Health
+  - Spirit
+  - Spawner
   layers:
   - Default
   - TransparentFX

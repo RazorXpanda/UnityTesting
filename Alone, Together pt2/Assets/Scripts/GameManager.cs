@@ -59,7 +59,7 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator RoundPlaying()
     {
-        while (playerIsAlive())
+        while (objectiveIsAlive())
         {
             yield return null;
         }
@@ -94,8 +94,10 @@ public class GameManager : MonoBehaviour
         return;
     }
 
-    private bool playerIsAlive()
+    private bool objectiveIsAlive()
     {
+        if (GameObject.FindGameObjectWithTag("Objective") == null)
+            return false;
         return true;
     }
 }
