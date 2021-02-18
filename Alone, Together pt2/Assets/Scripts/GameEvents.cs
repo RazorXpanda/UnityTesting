@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameEvents : MonoBehaviour
 {
@@ -17,5 +18,28 @@ public class GameEvents : MonoBehaviour
     {
         if (onDamageReceived != null)
             onDamageReceived(_id, _damage);
+    }
+
+    public Action onSpiritCollected;
+    public void SpiritCollected()
+    {
+        if(onSpiritCollected != null)
+        {
+            onSpiritCollected();
+        }
+    }
+
+    public void ObjectiveLost()
+    {
+        Debug.Log("Start end screen here");
+        StartCoroutine(EndScreen());
+    }
+
+    private IEnumerator EndScreen()
+    {
+        Debug.Log("Starting end screen");
+        // Shows the end screen here
+        yield return new WaitForSeconds(5f);
+        SceneManager.LoadScene("MainMenu");
     }
 }

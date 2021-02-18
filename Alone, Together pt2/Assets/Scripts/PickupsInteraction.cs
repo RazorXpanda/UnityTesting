@@ -50,6 +50,7 @@ public class PickupsInteraction : MonoBehaviour
         var objective = GameObject.FindGameObjectWithTag("Objective");
         LeanTween.move(this.gameObject, objective.transform.position, .75f).setEase(LeanTweenType.easeSpring);
         yield return new WaitForSeconds(1f);
+        GameEvents.current.onSpiritCollected();
         Destroy(this.gameObject);
     }
 }

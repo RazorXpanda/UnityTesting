@@ -10,7 +10,7 @@ public class EntityData : MonoBehaviour
      * Separate from controller's script to purely just handles data.
      * Also used to filter out which collider needs event triggers
      */
-    private static int startingHealth = 100;
+    private int startingHealth = 100;
     private int health;
 
     public GameObject dropPrefab;
@@ -37,6 +37,13 @@ public class EntityData : MonoBehaviour
     {
         // Subscribe to onDamageReceived event
         GameEvents.current.onDamageReceived += TakeDamage;
+        UIManagement.current.SetOverlayHealthUI(healthSlider, health);
+    }
+
+    public void Healing(int _amount)
+    {
+        health = health + _amount > 100 ? 100 : health + _amount;
+        UIManagement.current.SetOverlayHealthUI(healthSlider, health);
     }
 
     private void TakeDamage(int _id, int _damage)

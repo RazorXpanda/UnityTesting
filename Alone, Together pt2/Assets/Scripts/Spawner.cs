@@ -47,6 +47,15 @@ public class Spawner : MonoBehaviour
         count = spawnedEnemies.Count;
     }
 
+    public void ClearAllGhostsSpawned()
+    {
+        foreach(var entity in spawnedEnemies)
+        {
+            if (entity != null)
+                Destroy(entity.gameObject);
+        }
+    }
+
     // Use by GameManager to set the spawn cap of each wave
     public void SetSpawnCap(int _cap) => spawnCap = _cap;
 }

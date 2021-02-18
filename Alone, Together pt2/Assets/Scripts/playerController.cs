@@ -60,7 +60,7 @@ public class playerController : MonoBehaviour
 
     public void ResetPlayer()
     {
-
+        transform.position = Vector3.zero;
     }
 }
 
