@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using UnityEngine.Audio;
 
 public class StartScreen : MonoBehaviour
 {
@@ -18,4 +19,6 @@ public class StartScreen : MonoBehaviour
         m_AudioSource.PlayOneShot(m_AudioClip);
         SceneManager.LoadScene(gameSceneNumber);        
     }
+
+    public void OnButtonClick() => m_AudioSource.PlayOneShot(m_AudioClip);
 }
