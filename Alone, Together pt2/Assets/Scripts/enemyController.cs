@@ -99,20 +99,12 @@ public class enemyController : MonoBehaviour
         var distanceToTarget = (transform.position - target.transform.position).magnitude;
         if (distanceToTarget <= detectionRange * 2f)
         {
-            if(distanceToTarget <= 2f)
-            {
-                // Close combat
-                Debug.Log("Melee attack");
-            }
-            else
-            {
-                // At a distance, shoot
-                var direction = target.transform.position - transform.position;
-                direction.z = 0f;
-                var _bullet = Instantiate(bulletPrefab, shootingPoint.position, Quaternion.identity);
-                m_audioSource.PlayOneShot(m_audioClip);
-                LeanTween.move(_bullet, shootingPoint.position + (direction.normalized * 10f), .25f);
-            }
+            // At a distance, shoot
+            var direction = target.transform.position - transform.position;
+            direction.z = 0f;
+            var _bullet = Instantiate(bulletPrefab, shootingPoint.position, Quaternion.identity);
+            m_audioSource.PlayOneShot(m_audioClip);
+            LeanTween.move(_bullet, shootingPoint.position + (direction.normalized * 10f), .25f);
         }
     }
 
@@ -120,11 +112,11 @@ public class enemyController : MonoBehaviour
     {
         if(target != null)
         {
-            Vector3 targetVector = target.transform.position - transform.position;
-            if (Mathf.Abs(targetVector.magnitude) < detectionRange)
-                Move(CheckSurrounding());
+            if (Mathf.Abs((target.transform.position - transform.position).magnitude) > approachRange)
+                Move(target.transform.position);
             else
-                Move(transform.position + targetVector.normalized);
+                Move(CheckSurrounding());
+
             RotateToTarget();
         }
     }
@@ -162,14 +154,14 @@ public class enemyController : MonoBehaviour
     {
         // 8 directions
         Vector3 N, NE, E, SE, S, SW, W, NW;
-        N = transform.position + (transform.up * 2f);
-        NE = transform.position + (transform.up + transform.right).normalized * 2f;
-        E = transform.position + (transform.right * 2f);
-        SE = transform.position + (transform.right - transform.up).normalized * 2f;
-        S = transform.position + (-transform.up) * 2f;
-        SW = transform.position + (-transform.up - transform.right).normalized * 2f;
-        W = transform.position + (-transform.right * 2f);
-        NW = transform.position + (-transform.right + transform.up).normalized * 2f;
+        N = pivotPoint.transform.position + (pivotPoint.transform.up * 2f);
+        NE = pivotPoint.transform.position + (pivotPoint.transform.up + pivotPoint.transform.right).normalized * 2f;
+        E = pivotPoint.transform.position + (pivotPoint.transform.right * 2f);
+        SE = pivotPoint.transform.position + (pivotPoint.transform.right - pivotPoint.transform.up).normalized * 2f;
+        S = pivotPoint.transform.position + (-pivotPoint.transform.up) * 2f;
+        SW = pivotPoint.transform.position + (-pivotPoint.transform.up - pivotPoint.transform.right).normalized * 2f;
+        W = pivotPoint.transform.position + (-pivotPoint.transform.right * 2f);
+        NW = pivotPoint.transform.position + (-pivotPoint.transform.right + pivotPoint.transform.up).normalized * 2f;
 
         Dictionary<Vector3, float> directionalKeys = new Dictionary<Vector3, float>();
 
@@ -182,7 +174,8 @@ public class enemyController : MonoBehaviour
         }
         else
         {
-            foreach (var hit in Physics2D.RaycastAll(transform.position, N, 1f))
+            // Determine if there is anything in the way of where I tries to move to
+            foreach (var hit in Physics2D.RaycastAll(pivotPoint.transform.position, N, 1f))
             {
                 // Check for anything in the way
                 if (hit.collider.tag.Contains("Enemy"))
@@ -192,8 +185,14 @@ public class enemyController : MonoBehaviour
                 else
                     Npoints -= 45f;
             }
+
+            // Determine if there is a clear line between new position and target
+            foreach(var hit in Physics2D.RaycastAll(N, target.transform.position))
+            {
+                Npoints -= 20f;
+            }
         }
-        Npoints /= (N - target.transform.position).magnitude;
+        Npoints /= Mathf.Abs((N - target.transform.position).magnitude);
         directionalKeys.Add(N, Npoints);
 
         float NEpoints = 100f;
@@ -203,7 +202,7 @@ public class enemyController : MonoBehaviour
         }
         else
         {
-            foreach (var hit in Physics2D.RaycastAll(transform.position, NE, 1f))
+            foreach (var hit in Physics2D.RaycastAll(pivotPoint.transform.position, NE, 1f))
             {
                 // Check for anything in the way
                 if (hit.collider.tag.Contains("Enemy"))
@@ -212,6 +211,11 @@ public class enemyController : MonoBehaviour
                 }
                 else
                     NEpoints -= 45f;
+            }
+
+            foreach (var hit in Physics2D.RaycastAll(NE, target.transform.position))
+            {
+                NEpoints -= 20f;
             }
         }
         NEpoints /= Mathf.Abs((NE - target.transform.position).magnitude);
@@ -224,7 +228,7 @@ public class enemyController : MonoBehaviour
         }
         else
         {
-            foreach (var hit in Physics2D.RaycastAll(transform.position, E, 1f))
+            foreach (var hit in Physics2D.RaycastAll(pivotPoint.transform.position, E, 1f))
             {
                 // Check for anything in the way
                 if (hit.collider.tag.Contains("Enemy"))
@@ -233,6 +237,11 @@ public class enemyController : MonoBehaviour
                 }
                 else
                     NEpoints -= 45f;
+            }
+
+            foreach (var hit in Physics2D.RaycastAll(E, target.transform.position))
+            {
+                Epoints -= 20f;
             }
         }
         Epoints /= Mathf.Abs((E - target.transform.position).magnitude);
@@ -245,7 +254,7 @@ public class enemyController : MonoBehaviour
         }
         else
         {
-            foreach (var hit in Physics2D.RaycastAll(transform.position, SE, 1f))
+            foreach (var hit in Physics2D.RaycastAll(pivotPoint.transform.position, SE, 1f))
             {
                 // Check for anything in the way
                 if (hit.collider.tag.Contains("Enemy"))
@@ -254,6 +263,11 @@ public class enemyController : MonoBehaviour
                 }
                 else
                     SEpoints -= 45f;
+            }
+
+            foreach (var hit in Physics2D.RaycastAll(SE, target.transform.position))
+            {
+                SEpoints -= 20f;
             }
         }
         SEpoints /= Mathf.Abs((SE - target.transform.position).magnitude);
@@ -266,7 +280,7 @@ public class enemyController : MonoBehaviour
         }
         else
         {
-            foreach (var hit in Physics2D.RaycastAll(transform.position, S, 1f))
+            foreach (var hit in Physics2D.RaycastAll(pivotPoint.transform.position, S, 1f))
             {
                 // Check for anything in the way
                 if (hit.collider.tag.Contains("Enemy"))
@@ -275,6 +289,11 @@ public class enemyController : MonoBehaviour
                 }
                 else
                     Spoints -= 45f;
+            }
+
+            foreach (var hit in Physics2D.RaycastAll(S, target.transform.position))
+            {
+                Spoints -= 20f;
             }
         }
         Spoints /= Mathf.Abs((S - target.transform.position).magnitude);
@@ -288,7 +307,7 @@ public class enemyController : MonoBehaviour
         }
         else
         {
-            foreach (var hit in Physics2D.RaycastAll(transform.position, SW, 1f))
+            foreach (var hit in Physics2D.RaycastAll(pivotPoint.position, SW, 1f))
             {
                 // Check for anything in the way
                 if (hit.collider.tag.Contains("Enemy"))
@@ -297,6 +316,11 @@ public class enemyController : MonoBehaviour
                 }
                 else
                     SWpoints -= 45f;
+            }
+
+            foreach (var hit in Physics2D.RaycastAll(SW, target.transform.position))
+            {
+                SWpoints -= 20f;
             }
         }
         SWpoints /= Mathf.Abs((SW - target.transform.position).magnitude);
@@ -309,7 +333,7 @@ public class enemyController : MonoBehaviour
         }
         else
         {
-            foreach (var hit in Physics2D.RaycastAll(transform.position, W, 1f))
+            foreach (var hit in Physics2D.RaycastAll(pivotPoint.transform.position, W, 1f))
             {
                 // Check for anything in the way
                 if (hit.collider.tag.Contains("Enemy"))
@@ -318,6 +342,11 @@ public class enemyController : MonoBehaviour
                 }
                 else
                     Wpoints -= 45f;
+            }
+
+            foreach (var hit in Physics2D.RaycastAll(W, target.transform.position))
+            {
+                Wpoints -= 20f;
             }
         }
         Wpoints /= Mathf.Abs((W - target.transform.position).magnitude);
@@ -330,7 +359,7 @@ public class enemyController : MonoBehaviour
         }
         else
         {
-            foreach (var hit in Physics2D.RaycastAll(transform.position, NW, 1f))
+            foreach (var hit in Physics2D.RaycastAll(pivotPoint.transform.position, NW, 1f))
             {
                 // Check for anything in the way
                 if (hit.collider.tag.Contains("Enemy"))
@@ -339,6 +368,11 @@ public class enemyController : MonoBehaviour
                 }
                 else
                     NWpoints -= 45f;
+            }
+
+            foreach (var hit in Physics2D.RaycastAll(NW, target.transform.position))
+            {
+                NWpoints -= 20f;
             }
         }
         NWpoints /= Mathf.Abs((NW - target.transform.position).magnitude);
@@ -358,14 +392,14 @@ public class enemyController : MonoBehaviour
     private void OnDrawGizmos()
     {
         Vector3 N, NE, E, SE, S, SW, W, NW;
-        N = transform.position + (transform.up * 2f);
-        NE = transform.position + (transform.up + transform.right).normalized * 2f;
-        E = transform.position + (transform.right * 2f);
-        SE = transform.position + (transform.right - transform.up).normalized * 2f;
-        S = transform.position + (-transform.up) * 2f;
-        SW = transform.position + (-transform.up - transform.right).normalized * 2f;
-        W = transform.position + (-transform.right * 2f);
-        NW = transform.position + (-transform.right + transform.up).normalized * 2f;
+        N = pivotPoint.transform.position + (pivotPoint.transform.up * 2f);
+        NE = pivotPoint.transform.position + (pivotPoint.transform.up + pivotPoint.transform.right).normalized * 2f;
+        E = pivotPoint.transform.position + (pivotPoint.transform.right * 2f);
+        SE = pivotPoint.transform.position + (pivotPoint.transform.right - pivotPoint.transform.up).normalized * 2f;
+        S = pivotPoint.transform.position + (-pivotPoint.transform.up) * 2f;
+        SW = pivotPoint.transform.position + (-pivotPoint.transform.up - pivotPoint.transform.right).normalized * 2f;
+        W = pivotPoint.transform.position + (-pivotPoint.transform.right * 2f);
+        NW = pivotPoint.transform.position + (-pivotPoint.transform.right + pivotPoint.transform.up).normalized * 2f;
 
         Gizmos.DrawLine(transform.position, N);
         Gizmos.DrawLine(transform.position, NE);
@@ -375,7 +409,5 @@ public class enemyController : MonoBehaviour
         Gizmos.DrawLine(transform.position, SW);
         Gizmos.DrawLine(transform.position, W);
         Gizmos.DrawLine(transform.position, NW);
-
-        Gizmos.DrawWireSphere(transform.position, detectionRange);
     }
 }

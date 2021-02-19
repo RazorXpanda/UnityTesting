@@ -19,7 +19,7 @@ public class AudioControl : MonoBehaviour
         }
     }
 
-    private void Update()
+    public void OnSliderValueChange()
     {
         if(audioSlider != null)
         {

@@ -14,6 +14,7 @@ public class UIManagement : MonoBehaviour
 
     public void SetOverlayHealthUI(Slider _slider, int _value)
     {
-        _slider.value = _value;
+        if(_slider !=  null)
+            _slider.value = _value;
     }
 }
