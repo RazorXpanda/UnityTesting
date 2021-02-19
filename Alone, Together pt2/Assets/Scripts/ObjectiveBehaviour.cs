@@ -38,13 +38,14 @@ public class ObjectiveBehaviour : MonoBehaviour
             Destroy(this.gameObject);
 
         score += Time.deltaTime;
-        scoreText.text = $"Score: {Mathf.Ceil(score).ToString()}";
+        if(scoreText != null)
+            scoreText.text = $"Score: {Mathf.Ceil(score).ToString()}";
     }
 
-    private void SpiritCollected()
+    private void SpiritCollected(int _multiplier)
     {
-        pointLight.pointLightOuterRadius += dimAmount * 2;
-        pointLight.pointLightInnerRadius += dimAmount * 2;
+        pointLight.pointLightOuterRadius += dimAmount * _multiplier;
+        pointLight.pointLightInnerRadius += dimAmount * _multiplier;
 
         GetComponent<EntityData>().Healing(5);
     }

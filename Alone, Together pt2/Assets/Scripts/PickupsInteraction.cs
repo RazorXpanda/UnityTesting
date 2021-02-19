@@ -37,6 +37,10 @@ public class PickupsInteraction : MonoBehaviour
                     return;
             }
         }
+        else
+        {
+            return;
+        }
     }
 
     private void Update()
@@ -50,7 +54,7 @@ public class PickupsInteraction : MonoBehaviour
         var objective = GameObject.FindGameObjectWithTag("Objective");
         LeanTween.move(this.gameObject, objective.transform.position, .75f).setEase(LeanTweenType.easeSpring);
         yield return new WaitForSeconds(1f);
-        GameEvents.current.onSpiritCollected();
+        GameEvents.current.onSpiritCollected(10);
         Destroy(this.gameObject);
     }
 }

@@ -15,9 +15,7 @@ public class Spawner : MonoBehaviour
     void Start()
     {
         spawnedEnemies = new List<GameObject>();
-        nextSpawnTime = 0f;
-
-        SetSpawnCap(10);
+        nextSpawnTime = Time.time + spawnInterval;
     }
 
     private void Update()
@@ -37,7 +35,8 @@ public class Spawner : MonoBehaviour
         {
             if (enemyPrefab != null && spawnedEnemies.Count < spawnCap)
             {
-                var newEnemy = Instantiate(enemyPrefab, transform.position, Quaternion.identity);
+                Vector3 spawnPos = new Vector3(Random.Range(-15f, 15f), Random.Range(-15f, 15f), 0);
+                var newEnemy = Instantiate(enemyPrefab, transform.position + spawnPos, Quaternion.identity);
                 newEnemy.GetComponent<enemyController>().isAggro = true;
 
                 spawnedEnemies.Add(newEnemy);
@@ -58,4 +57,9 @@ public class Spawner : MonoBehaviour
 
     // Use by GameManager to set the spawn cap of each wave
     public void SetSpawnCap(int _cap) => spawnCap = _cap;
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawWireSphere(transform.position, 15f);
+    }
 }

@@ -20,18 +20,24 @@ public class GameEvents : MonoBehaviour
             onDamageReceived(_id, _damage);
     }
 
-    public Action onSpiritCollected;
-    public void SpiritCollected()
+    public Action<int> onSpiritCollected;
+    public void SpiritCollected(int _multiplier)
     {
         if(onSpiritCollected != null)
         {
-            onSpiritCollected();
+            onSpiritCollected(_multiplier);
         }
     }
 
     public void ObjectiveLost()
     {
-        Debug.Log("Start end screen here");
+        Debug.Log("Start lost end screen here");
+        StartCoroutine(EndScreen());
+    }
+
+    public void ObjectiveAchieved()
+    {
+        Debug.Log("Start win end screen here");
         StartCoroutine(EndScreen());
     }
 
