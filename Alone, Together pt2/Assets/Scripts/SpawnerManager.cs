@@ -4,7 +4,13 @@ using UnityEngine;
 
 public class SpawnerManager : MonoBehaviour
 {
+    public static SpawnerManager current;
     List<GameObject> spawnerList;
+
+    private void Awake()
+    {
+        current = this;
+    }
 
     private void Start()
     {

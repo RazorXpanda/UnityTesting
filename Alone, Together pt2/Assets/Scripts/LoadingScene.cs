@@ -26,9 +26,9 @@ public class LoadingScene : MonoBehaviour
         //     yield return null;
         // }
         //loading scene in background        
-            // //LOADING BAR
-            // _progress.fillAmount = gameLevel.progress;
-            // yield return new WaitForEndOfFrame();
+        // //LOADING BAR
+        // _progress.fillAmount = gameLevel.progress;
+        // yield return new WaitForEndOfFrame();
         yield return new WaitForEndOfFrame();
     }
 

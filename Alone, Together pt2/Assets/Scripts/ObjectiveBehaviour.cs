@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class ObjectiveBehaviour : MonoBehaviour
 {
+    public Text HelpfulText;
     public Text scoreText;
     public float score;
     public Light2D pointLight;
@@ -14,8 +15,12 @@ public class ObjectiveBehaviour : MonoBehaviour
     public float lightDimInterval;
     private float nextDimTime;
 
+    static int amountOfSpiritTilFreeze = 10;
+    public int amountOfSpiritCollected;
+
     private void Start()
     {
+        amountOfSpiritCollected = 0;
         score = 0f;
         if (pointLight == null)
             pointLight = GetComponentInChildren<Light2D>();
@@ -39,7 +44,7 @@ public class ObjectiveBehaviour : MonoBehaviour
 
         score += Time.deltaTime;
         if(scoreText != null)
-            scoreText.text = $"Score: {Mathf.Ceil(score).ToString()}";
+            scoreText.text = $"Time: {Mathf.Ceil(score - 5f > 0 ? score - 5f : 0).ToString()}";
     }
 
     private void SpiritCollected(int _multiplier)
@@ -47,7 +52,26 @@ public class ObjectiveBehaviour : MonoBehaviour
         pointLight.pointLightOuterRadius += dimAmount * _multiplier;
         pointLight.pointLightInnerRadius += dimAmount * _multiplier;
 
+        amountOfSpiritCollected++;
+        if(amountOfSpiritCollected % amountOfSpiritTilFreeze == 0)
+        {
+            StartCoroutine(FreezeSpawners());
+        }
+
         GetComponent<EntityData>().Healing(5);
+    }
+
+    IEnumerator FreezeSpawners()
+    {
+        SpawnerManager.current.DisableAllSpawners();
+        foreach(var ghost in GameObject.FindGameObjectsWithTag("Enemy"))
+        {
+            Destroy(ghost);
+        }
+        HelpfulText.text = $"All the ghosts are sealed temporarily!\nUse this chance to go light more torches!";
+        yield return new WaitForSeconds(15f);
+        SpawnerManager.current.EnableAllSpawners();
+        HelpfulText.text = "";
     }
 
     private void OnDestroy()
