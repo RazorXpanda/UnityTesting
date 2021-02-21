@@ -14,6 +14,7 @@ public class EntityData : MonoBehaviour
     private int health;
 
     public GameObject dropPrefab;
+    public Transform spawnPoint;
     public int dropChance;
 
     [Header("UI")]
@@ -58,7 +59,15 @@ public class EntityData : MonoBehaviour
                 {
                     Instantiate(dropPrefab, transform.position, Quaternion.identity);
                 }
-                Destroy(this.gameObject);
+                if(this.tag.Contains("Player"))
+                {
+                    this.transform.position = spawnPoint.position;
+                    StartCoroutine(Respawning());
+                }
+                else
+                {
+                    Destroy(this.gameObject);
+                }
             }
             else if (health > 100)
                 health = 100;
@@ -66,6 +75,19 @@ public class EntityData : MonoBehaviour
             if (healthSlider != null)
                 UIManagement.current.SetOverlayHealthUI(healthSlider, health);
         }
+    }
+
+    IEnumerator Respawning()
+    {
+        var _playerController = gameObject.GetComponent<playerController>();
+        var _spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
+        _playerController.enabled = false;
+        _spriteRenderer.enabled = false;
+        yield return new WaitForSeconds(2f);
+        _playerController.enabled = true;
+        _spriteRenderer.enabled = true;
+        health = startingHealth;
+        UIManagement.current.SetOverlayHealthUI(healthSlider, health);
     }
 
     private void OnDestroy()

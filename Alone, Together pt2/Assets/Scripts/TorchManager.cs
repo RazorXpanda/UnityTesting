@@ -12,7 +12,6 @@ public class TorchManager : MonoBehaviour
     [SerializeField] GameObject torchUI;
     Text torchText;
 
-
     private void Start()
     {
         
@@ -52,5 +51,4 @@ public class TorchManager : MonoBehaviour
 
         return true;
     }
-
 }

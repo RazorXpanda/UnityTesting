@@ -4,14 +4,12 @@ using UnityEngine;
 
 public class playerController : MonoBehaviour
 {
-    #region Debug
     public float bulletSpeed;
-    public GameObject debugCube;
-    #endregion
-
     private Rigidbody2D rbPlayer;
 
     [SerializeField] private float moveSpeed;
+    [SerializeField] private Animator animController;
+    [SerializeField] private Transform shootingPivot;
     [SerializeField] private Transform shootingPoint;
     [SerializeField] private GameObject bulletPrefab;
     [SerializeField] private Camera cam;
@@ -42,11 +40,13 @@ public class playerController : MonoBehaviour
         movement.Normalize();
         Vector2 direction = Vector2.up * movement.y + Vector2.right * movement.x;
         rbPlayer.MovePosition(rbPlayer.position + direction * moveSpeed * Time.fixedDeltaTime);
+        animController.SetFloat("moveX", movement.x);
+        animController.SetFloat("moveY", movement.y);
 
         var mousePos = Input.mousePosition;
         var screenPos = cam.ScreenToWorldPoint(new Vector3(mousePos.x, mousePos.y, transform.position.z - cam.transform.position.z));
      
-        rbPlayer.transform.eulerAngles = new Vector3(0,0,Mathf.Atan2((screenPos.y - transform.position.y), (screenPos.x - transform.position.x))* Mathf.Rad2Deg);;
+        shootingPivot.eulerAngles = new Vector3(0,0,Mathf.Atan2((screenPos.y - transform.position.y), (screenPos.x - transform.position.x))* Mathf.Rad2Deg);;
     }
 
     void Shoot()
