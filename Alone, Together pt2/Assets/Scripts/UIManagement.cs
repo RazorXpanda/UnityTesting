@@ -26,7 +26,7 @@ public class UIManagement : MonoBehaviour
 
     private IEnumerator StartingGame()
     {
-        yield return new WaitForSeconds(5f);
+        yield return new WaitForSeconds(15f);
         if (infoPanel.activeSelf)
             infoPanel.SetActive(false);
     }
