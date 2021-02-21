@@ -12,9 +12,11 @@ public class TorchInteraction : MonoBehaviour
     public bool isLit;
     bool playerNearby;
     float lightingTime;
+    TorchManager torchManager;
 
     private void Start()
     {
+        torchManager = GameObject.FindGameObjectWithTag("TorchManager").GetComponent<TorchManager>();
         isLit = false;
         playerNearby = false;
         lightingTime = 2f;
@@ -50,6 +52,7 @@ public class TorchInteraction : MonoBehaviour
                 torchLight.gameObject.SetActive(true);
                 torchFire.SetActive(true);
                 torchBase.SetActive(false);
+                torchManager.currentTorches++;
             }
         }
     }
